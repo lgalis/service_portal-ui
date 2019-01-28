@@ -14,10 +14,6 @@ export function listPortfolioItems() {
   return userApi.listPortfolioItems();
 }
 
-export function getPortfolioItem(portfolioId, portfolioItemId) {
-  return userApi.fetchPortfolioItemFromPortfolio(portfolioId, portfolioItemId);
-}
-
 export function getPortfolio(portfolioId) {
   return userApi.fetchPortfolioWithId(portfolioId);
 }
@@ -46,7 +42,6 @@ export async function addToPortfolio(portfolioId, items) {
       await userApi.addPortfolioItemToPortfolio(portfolioId, JSON.stringify({ portfolio_item_id: newItem.id }));
     }
   }
-
   return newItem;
 }
 
