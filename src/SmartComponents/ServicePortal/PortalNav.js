@@ -46,7 +46,7 @@ class PortalNav extends Component {
     ? <NavLoader items={ 3 } />
     : this.platformNavItems()
 
-  renderPortfilioNav = () => this.props.isLoading && this.props.portfolios.length === 0
+  renderPortfolioNav = () => this.props.isLoading && this.props.portfolios.length === 0
     ? <NavLoader items={ 5 } />
     : this.portfolioNavItems()
 
@@ -67,7 +67,7 @@ class PortalNav extends Component {
               All Portfolios
             </NavLink>
           </NavItem>
-          { this.renderPortfilioNav() }
+          { this.renderPortfolioNav() }
         </NavGroup>
       </Nav>
     );
