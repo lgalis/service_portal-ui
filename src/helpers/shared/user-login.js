@@ -1,13 +1,32 @@
 import axios from 'axios';
-import {  RequestApi, WorkflowApi } from '@redhat-cloud-services/approval-client';
+import { RequestApi, WorkflowApi } from '@redhat-cloud-services/approval-client';
 import { DefaultApi as SourcesDefaultApi } from '@redhat-cloud-services/sources-client';
 import { DefaultApi as TopologicalDefaultApi } from '@redhat-cloud-services/topological-inventory-client';
-import { PortfolioApi, PortfolioItemApi, OrderApi, OrderItemApi } from '@redhat-cloud-services/catalog-client';
+import { PortfolioApi, PortfolioItemApi, OrderApi, OrderItemApi, IconApi } from '@redhat-cloud-services/catalog-client';
 
 import { SOURCES_API_BASE, TOPOLOGICAL_INVENTORY_API_BASE, CATALOG_API_BASE, APPROVAL_API_BASE, RBAC_API_BASE } from '../../utilities/constants';
 import { AccessApi, PrincipalApi, GroupApi } from '@redhat-cloud-services/rbac-client';
 
 const axiosInstance = axios.create();
+
+let admin_hash = { 'x-rh-auth-identity': btoa(JSON.stringify({ identity: { is_org_admin: true }})) };
+const user_hash = { 'x-rh-identity': btoa(JSON.stringify({ identity: { account_number: '1111111', type: 'User', user: {
+  username: 'lgalis@redhat.com',
+  email: 'lgalis@redhat.com',
+  first_name: 'Laura',
+  last_name: 'Galis',
+  is_active: true,
+  is_org_admin: true,
+  is_internal: false,
+  locale: 'en_US' },
+internal: {
+  org_id: '1460290',
+  auth_type: 'basic-auth',
+  auth_time: 6300 }
+}
+})) };
+
+Object.assign(axiosInstance.defaults.headers, user_hash);
 
 const paramSerializer = config => {
   config.url = config.url.replace(/(?==)*%+/g, value => value.replace(/%/g, '%25%0A'));
@@ -32,6 +51,7 @@ const orderApi = new OrderApi(undefined, CATALOG_API_BASE, axiosInstance);
 const orderItemApi = new OrderItemApi(undefined, CATALOG_API_BASE, axiosInstance);
 const portfolioApi = new PortfolioApi(undefined, CATALOG_API_BASE, axiosInstance);
 const portfolioItemApi = new PortfolioItemApi(undefined, CATALOG_API_BASE, axiosInstance);
+const iconApi = new IconApi(undefined, CATALOG_API_BASE, axiosInstance);
 const requestsApi = new RequestApi(undefined, APPROVAL_API_BASE, axiosInstance);
 const workflowApi = new WorkflowApi(undefined, APPROVAL_API_BASE, axiosInstance);
 const sourcesApi = new SourcesDefaultApi(undefined, SOURCES_API_BASE, axiosInstance);
@@ -51,6 +71,10 @@ export function getPortfolioApi() {
 
 export function getPortfolioItemApi() {
   return portfolioItemApi;
+}
+
+export function getIconApi() {
+  return iconApi;
 }
 
 export function getOrderApi() {

@@ -7,12 +7,14 @@ import { AppPlaceholder } from './presentational-components/shared/loader-placeh
 const Platforms = lazy(() => import('./smart-components/platform/platforms'));
 const Portfolios = lazy(() => import('./smart-components/portfolio/portfolios'));
 const Orders = lazy(() => import('./smart-components/order/orders'));
+const CreateIcon = lazy(() => import('./smart-components/portfolio/portfolio-item-detail/create-icon'));
 
 const paths = {
   platforms: '/platforms',
   portfolios: '/portfolios',
   portfolioItem: '/portfolios/:id',
-  orders: '/orders'
+  orders: '/orders',
+  icons: '/icons'
 };
 
 const InsightsRoute = ({ rootClass, ...rest }) => {
@@ -35,6 +37,7 @@ export const Routes = props => {
         <InsightsRoute path={ paths.portfolios } component={ Portfolios } rootClass="portfolios" />
         <InsightsRoute path={ paths.platforms } component={ Platforms } rootClass="platforms"/>
         <InsightsRoute path={ paths.orders } component={ Orders } rootClass="catalog" />
+        <InsightsRoute path={ paths.icons } component={ CreateIcon } rootClass="catalog" />
         { /* Finally, catch all unmatched routes */ }
         <Route render={ () => (some(paths, p => p === path) ? null : <Redirect to={ paths.portfolios } />) } />
       </Switch>

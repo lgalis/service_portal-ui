@@ -19,6 +19,7 @@ const AddPortfolioModal = ({
 }) => {
   const onSubmit = data => {
     goBack();
+    console.log('Debug - portfolio data', data);
     return initialValues
       ? updatePortfolio(data)
       : addPortfolio(data);

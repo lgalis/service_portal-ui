@@ -6,5 +6,6 @@ const localhost = (process.env.PLATFORM === 'linux') ? 'localhost' : 'host.docke
 
 exports.routes = {
   '/hybrid/catalog': { host: `http://${localhost}:8002` },
-  '/apps/catalog': { host: `http://${localhost}:8002` }
+  '/apps/catalog': { host: `http://${localhost}:8002` },
+  '/api/catalog': { host: 'http://localhost:3000' }
 };
