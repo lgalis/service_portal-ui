@@ -12,10 +12,12 @@ ToolbarButton.propTypes = {
   title: PropTypes.string.isRequired
 };
 
+const AppToolbar = ({ ...props }) => <Toolbar className= "pf-u-pb-md pf-u-pt-md pf-u-pr-lg pf-u-pl-xl toolbar" { ...props }/>;
+
 const toolbarMapper = {
   TopToolbar,
   TopToolbarTitle,
-  Toolbar,
+  Toolbar: AppToolbar,
   ToolbarGroup,
   ToolbarItem,
   FilterToolbarItem,
