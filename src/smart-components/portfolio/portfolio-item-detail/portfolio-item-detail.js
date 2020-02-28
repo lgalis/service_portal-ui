@@ -74,9 +74,9 @@ const PortfolioItemDetail = () => {
               product={portfolioItem}
               setOpen={setOpen}
               isFetching={isFetching}
-              availability={source.availability_status}
+              availability={'unavailable'}
             />
-            {source.availability_status === 'unavailable' && (
+            {source.availability_status !== 'unavailable' && (
               <Alert
                 className="pf-u-ml-lg pf-u-mr-lg"
                 id="unavailable-alert-info"
