@@ -10,11 +10,7 @@ describe('<ItemDetailInfoBar />', () => {
     initialProps = {
       product: {
         distributor: 'foo',
-        service_offering_source_ref: '111',
-        updated_at:
-          'Fri Mar 22 2019 08:36:57 GMT+0100 (Central European Standard Time)',
-        created_at:
-          'Fri Mar 22 2019 08:36:57 GMT+0100 (Central European Standard Time)'
+        service_offering_source_ref: '111'
       },
       source: {
         id: '111',
