@@ -139,7 +139,6 @@ const changeValidators = (schema) => {
         }
       : rest;
   });
-  return result;
 };
 
 // remove after API full migration to v2
@@ -174,7 +173,7 @@ const SurveyEditor = ({ closeUrl, search, portfolioItem }) => {
    * There is an issues with later versions react final form, that it ignores parent props changes and caches
    * itself to increase performance. This had an unfortunate side effect of ignoring the outside schema changes
    * which are not propagated to the component tree. We use this counter to destroy the old and create a new instance
-   * when the key (updateHack) counter is changed. There is currently no better sollution due to the fact that the
+   * when the key (updateHack) counter is changed. There is currently no better solution due to the fact that the
    * react final form is an outside dependency.
    * We will make an effort to fix it inside the library but until then we need this workaround.
    */
@@ -198,15 +197,20 @@ const SurveyEditor = ({ closeUrl, search, portfolioItem }) => {
             .get(`${CATALOG_API_BASE}/service_plans/${servicePlan[0].id}/base`)
             .then((baseSchema) => {
               setBaseSchema(
-                changeValidators(baseSchema.create_json_schema.schema)
+                changeValidators(
+                  addSubstitutionOptions(baseSchema.create_json_schema.schema)
+                )
               );
-              return changeValidators(schema);
+              console.log('Debug 1 - getServicePlans schema:', schema);
+              return changeValidators(addSubstitutionOptions(schema));
             });
         }
 
-        return changeValidators(schema);
+        console.log('Debug 2 - getServicePlans schema:', schema);
+        return changeValidators(addSubstitutionOptions(schema));
       })
       .then((schema) => {
+        console.log('Debug 3 - getServicePlans schema:', schema);
         setSchema(schema);
         setIsFetching(false);
       });
@@ -214,12 +218,15 @@ const SurveyEditor = ({ closeUrl, search, portfolioItem }) => {
     getServicePlan();
   }, []);
 
-  const modifySurvey = (editedTemplate) =>
-    getServicePlansApi().patchServicePlanModified(`${servicePlan.id}`, {
+  const modifySurvey = (editedTemplate) => {
+    return getServicePlansApi().patchServicePlanModified(`${servicePlan.id}`, {
       modified: { schema: editedTemplate }
     });
-  const createSurvey = (editedTemplate) =>
-    getServicePlansApi()
+  };
+
+  const createSurvey = (editedTemplate) => {
+    console.log('Debug - createSurvey editedTemplate: ', editedTemplate);
+    return getServicePlansApi()
       .createServicePlan({ portfolio_item_id: portfolioItem.id })
       .then(([{ id }]) => id)
       .then((id) =>
@@ -227,6 +234,23 @@ const SurveyEditor = ({ closeUrl, search, portfolioItem }) => {
           modified: { schema: editedTemplate }
         })
       );
+  };
+
+  const addSubstitutionOptions = (schema) => {
+    const updatedFields = schema?.fields?.map((field) => {
+      if (field.isSubstitution) {
+        field.type = componentTypes.SELECT;
+        field.options = [
+          { label: '{{Test1}}', value: '{{test1}}' },
+          { label: '{{Test2}}', value: '{{test2}}' }
+        ];
+      }
+
+      return field;
+    });
+    return { ...schema, fields: updatedFields };
+  };
+
   const updateSubstitutionFields = (editedTemplate) => {
     const updatedFields = editedTemplate.fields.map((field) => {
       let updatedField = field;
@@ -234,6 +258,7 @@ const SurveyEditor = ({ closeUrl, search, portfolioItem }) => {
         updatedField.isDisabled = true;
         updatedField.placeholder = field.initialValue;
       }
+
       return updatedField;
     });
     return { ...editedTemplate, fields: updatedFields };
